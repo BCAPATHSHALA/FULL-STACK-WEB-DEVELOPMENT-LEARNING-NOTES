@@ -12,6 +12,10 @@ import Footer from "./components/Footer";
 const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  window.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+  });
+
   return (
     <>
       <HeaderPhone menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
