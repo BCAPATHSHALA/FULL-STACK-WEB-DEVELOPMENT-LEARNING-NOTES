@@ -9,6 +9,7 @@ import { createServer } from "http";
 const PORT = process.env.PORT;
 const home = readFileSync("./index.html");
 const about = readFileSync("./about.html");
+const notPage = readFileSync("./404page.html");
 
 const server = createServer((req, res) => {
   if (req.url === "/") {
@@ -17,7 +18,7 @@ const server = createServer((req, res) => {
   if (req.url === "/about") {
     return res.end(`${about}`);
   } else {
-    return res.end(`<h1>401 Page Not Found!</h1>`);
+    return res.end(notPage);
   }
 });
 
