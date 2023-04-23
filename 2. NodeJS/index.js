@@ -6,7 +6,7 @@
 import { readFileSync } from "fs";
 import { createServer } from "http";
 
-const PORT = process.env.PORT;
+const PORT = 4000 || process.env.PORT;
 const home = readFileSync("./index.html");
 const about = readFileSync("./about.html");
 const notPage = readFileSync("./404page.html");
