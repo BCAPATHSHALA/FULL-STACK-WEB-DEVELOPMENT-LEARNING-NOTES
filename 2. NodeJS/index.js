@@ -6,8 +6,7 @@
 import { readFileSync } from "fs";
 import { createServer } from "http";
 
-const PORT = 4000;
-const hostname = "localhost";
+const PORT = process.env.PORT;
 const home = readFileSync("./index.html");
 const about = readFileSync("./about.html");
 
@@ -22,6 +21,6 @@ const server = createServer((req, res) => {
   }
 });
 
-server.listen(PORT, hostname, () => {
+server.listen(PORT, () => {
   console.log(`Server is working on http://${hostname}:${PORT}`);
 });
