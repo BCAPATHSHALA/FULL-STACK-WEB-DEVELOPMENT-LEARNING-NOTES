@@ -46,6 +46,6 @@ PHONE: https://www.youtube.com/watch?v=jGWUCl2plck
 https://www.youtube.com/watch?v=AN3t-OmdyKA&t=55625s
 
 🎯New Technology……………………Next……Target…………
-🧲1. NextJS
-🧲2. Typescript 
+🧲1. Typescript 
+🧲2. NextJS
 🧲3. React Native
