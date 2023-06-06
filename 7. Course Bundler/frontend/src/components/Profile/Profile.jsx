@@ -18,9 +18,13 @@ import {
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
+import { updateProfilePicture } from '../../redux/actions/profile';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadUser } from '../../redux/actions/user';
+import { toast } from 'react-hot-toast';
 
 const fileUploadCss = {
   cursor: 'pointer',
@@ -32,34 +36,35 @@ const fileUploadCss = {
   backgroundColor: 'white',
 };
 
-const Profile = () => {
-  const user = {
-    name: 'Manoj Nishad',
-    email: 'manojnishad@gmail.com',
-    createdAt: String(new Date().toISOString()),
-    role: 'user',
-    subscription: {
-      status: 'active',
-    },
-    playlist: [
-      {
-        course: 'xyzID',
-        poster:
-          'https://images.prismic.io/loco-blogs/79328284-f97b-489f-924c-eb3b17e34b56_image2.png?auto=compress%2Cformat&rect=0%2C0%2C1999%2C1124&w=1920&h=1080&ar=1.91%3A1',
-      },
-    ],
-  };
-
+const Profile = ({ user }) => {
   const removeFromPlaylistHandler = id => {
     console.log(id);
   };
 
-  const changeImageSubmitHandler = (e, image) => {
+  const dispatch = useDispatch();
+  const { loading, message, error } = useSelector(state => state.profile);
+
+  const changeImageSubmitHandler = async (e, image) => {
     e.preventDefault();
-    console.log(image);
+    const myForm = new FormData();
+    myForm.append('file', image);
+
+    await dispatch(updateProfilePicture(myForm));
+    dispatch(loadUser());
   };
 
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+  }, [dispatch, error, message]);
 
   return (
     <Container minH={'95vh'} maxW={'container.lg'} py={'8'}>
@@ -72,7 +77,7 @@ const Profile = () => {
         padding={'8'}
       >
         <VStack>
-          <Avatar boxSize={'48'} />
+          <Avatar boxSize={'48'} src={user.avatar.url} />
           <Button onClick={onOpen} colorScheme="yellow" variant={'ghost'}>
             Change Photo
           </Button>
@@ -95,7 +100,7 @@ const Profile = () => {
           {user.role !== 'admin' && (
             <HStack>
               <Text fontWeight={'bold'}>Subscription</Text>
-              {user.subscription.status === 'active' ? (
+              {user.subscription && user.subscription.status === 'active' ? (
                 <Button color="yellow.500" variant={'unstyled'}>
                   Cancel Subscription
                 </Button>
@@ -155,6 +160,7 @@ const Profile = () => {
         changeImageSubmitHandler={changeImageSubmitHandler}
         isOpen={isOpen}
         onClose={onClose}
+        loading={loading}
       />
     </Container>
   );
@@ -162,7 +168,12 @@ const Profile = () => {
 
 export default Profile;
 
-function ChangePhotoBox({ isOpen, onClose, changeImageSubmitHandler }) {
+function ChangePhotoBox({
+  isOpen,
+  onClose,
+  changeImageSubmitHandler,
+  loading,
+}) {
   const [image, setImage] = useState('');
   const [imagePrev, setImagePrev] = useState('');
 
@@ -200,6 +211,7 @@ function ChangePhotoBox({ isOpen, onClose, changeImageSubmitHandler }) {
                   onChange={changeImage}
                 />
                 <Button
+                  isLoading={loading}
                   onClick={onClose}
                   w={'full'}
                   colorScheme="yellow"
