@@ -25,17 +25,17 @@ export const courseReducer = createReducer(
       state.loading = false;
       state.error = action.payload;
     },
-    // getCourseRequest: state => {
-    //   state.loading = true;
-    // },
-    // getCourseSuccess: (state, action) => {
-    //   state.loading = false;
-    //   state.lectures = action.payload;
-    // },
-    // getCourseFail: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload;
-    // },
+    getCourseRequest: state => {
+      state.loading = true;
+    },
+    getCourseSuccess: (state, action) => {
+      state.loading = false;
+      state.lectures = action.payload;
+    },
+    getCourseFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
     clearError: state => {
       state.error = null;
     },

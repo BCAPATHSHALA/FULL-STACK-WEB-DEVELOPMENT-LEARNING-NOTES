@@ -121,7 +121,14 @@ const App = () => {
               <Route path="/paymentsuccess" element={<PaymentSuccess />} />
               <Route path="/paymentfail" element={<PaymentFail />} />
               <Route path="*" element={<NotFound />} />
-              <Route path="/course/:id" element={<CoursePage />} />
+              <Route
+                path="/course/:id"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <CoursePage user={user} />
+                  </ProtectedRoute>
+                }
+              />
 
               <Route
                 path="/profile"
