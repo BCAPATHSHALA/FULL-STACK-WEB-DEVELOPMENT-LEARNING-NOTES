@@ -151,7 +151,7 @@ export const forgetPassword = catchAsyncError(async (req, res, next) => {
 
   await user.save();
 
-  const url = `${process.env.FRONTEND_URL}/api/v1/resetpassword/${resetToken}`;
+  const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
 
   const message = `Click on the link to reset your password. ${url}. If you have not request then please ignore.`;
 

@@ -84,8 +84,28 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/forgetpassword" element={<ForgetPassword />} />
-              <Route path="/resetpassword/:token" element={<ResetPassword />} />
+              <Route
+                path="/forgetpassword"
+                element={
+                  <ProtectedRoute
+                    isAuthenticated={!isAuthenticated}
+                    redirect="/profile"
+                  >
+                    <ForgetPassword />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/resetpassword/:token"
+                element={
+                  <ProtectedRoute
+                    isAuthenticated={!isAuthenticated}
+                    redirect="/profile"
+                  >
+                    <ResetPassword />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/contact" element={<Contact />} />
               <Route path="/request" element={<Request />} />
               <Route path="/about" element={<About />} />
