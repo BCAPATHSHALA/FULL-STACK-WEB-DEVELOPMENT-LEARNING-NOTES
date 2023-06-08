@@ -15,44 +15,75 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import cursor from '../../../assets/images/cursor.png';
 import Sidebar from '../Sidebar';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import CourseModal from './CourseModal';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getAllCourses,
+  getCourseLectures,
+} from '../../../redux/actions/course';
+import {
+  addLecture,
+  deleteCourse,
+  deleteLecture,
+} from '../../../redux/actions/admin';
+import { toast } from 'react-hot-toast';
 
 const AdminCourses = () => {
-  const courses = [
-    {
-      _id: 'usersiddkhjkgvudgvksgvk',
-      title: 'React Course',
-      category: 'Web Development',
-      poster: {
-        url: 'https://www.daac.in/images/course/78838d57d1a7987f1183db17cb6c27f6793802489-mern.jpg',
-      },
-      createdBy: 'Manoj Nishad',
-      views: 123,
-      numOfVideos: 12,
-    },
-  ];
+  const { courses, lectures } = useSelector(state => state.course);
+  const { error, message, loading } = useSelector(state => state.admin);
+
+  const dispatch = useDispatch();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const courseDetailsHandler = userId => {
+  const [courseId, setCourseId] = useState('');
+  const [courseTitle, setCourseTitle] = useState('');
+
+  const courseDetailsHandler = (courseId, title) => {
+    dispatch(getCourseLectures(courseId));
     onOpen();
+    setCourseId(courseId);
+    setCourseTitle(title);
   };
 
-  const deleteButtonHandler = userId => {
-    console.log(userId);
+  const deleteButtonHandler = courseId => {
+    dispatch(deleteCourse(courseId));
   };
 
-  const deleteLectureButtonHandler = (courseId, lectureId) => {
-    console.log(courseId, lectureId);
+  const deleteLectureButtonHandler = async (courseId, lectureId) => {
+    await dispatch(deleteLecture(courseId, lectureId));
+    dispatch(getCourseLectures(courseId));
   };
 
-  const addLectureHandler = (e, courseId, title, description, video) => {
+  const addLectureHandler = async (e, courseId, title, description, video) => {
     e.preventDefault();
+    const myForm = new FormData();
+
+    myForm.append('title', title);
+    myForm.append('description', description);
+    myForm.append('file', video);
+
+    await dispatch(addLecture(courseId, myForm));
+    dispatch(getCourseLectures(courseId));
   };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+
+    dispatch(getAllCourses());
+  }, [dispatch, error, message]);
 
   return (
     <Grid
@@ -89,6 +120,7 @@ const AdminCourses = () => {
                   deleteButtonHandler={deleteButtonHandler}
                   key={item._id}
                   item={item}
+                  loading={loading}
                 />
               ))}
             </Tbody>
@@ -97,10 +129,12 @@ const AdminCourses = () => {
         <CourseModal
           isOpen={isOpen}
           onClose={onClose}
-          id={"courseId"}
-          courseTitle="React Course"
+          id={courseId}
+          courseTitle={courseTitle}
           deleteButtonHandler={deleteLectureButtonHandler}
           addLectureHandler={addLectureHandler}
+          lectures={lectures}
+          loading={loading}
         />
       </Box>
       <Sidebar />
@@ -110,7 +144,7 @@ const AdminCourses = () => {
 
 export default AdminCourses;
 
-function Row({ item, courseDetailsHandler, deleteButtonHandler }) {
+function Row({ item, courseDetailsHandler, deleteButtonHandler, loading }) {
   return (
     <Tr>
       <Td>#{item._id}</Td>
@@ -126,13 +160,15 @@ function Row({ item, courseDetailsHandler, deleteButtonHandler }) {
       <Td isNumeric>
         <HStack justifyContent={'flex-end'}>
           <Button
-            onClick={() => courseDetailsHandler(item._id)}
+            onClick={() => courseDetailsHandler(item._id, item.title)}
             variant={'outline'}
             color={'purple.500'}
+            isLoading={loading}
           >
             View Lectures
           </Button>
           <Button
+            isLoading={loading}
             onClick={() => deleteButtonHandler(item._id)}
             color={'purple.600'}
           >

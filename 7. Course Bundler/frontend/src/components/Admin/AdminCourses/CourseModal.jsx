@@ -26,7 +26,8 @@ const CourseModal = ({
   deleteButtonHandler,
   addLectureHandler,
   courseTitle,
-  lectures = [1, 2, 3, 4, 5, 6, 7, 8, 9],
+  lectures = [],
+  loading,
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -75,12 +76,13 @@ const CourseModal = ({
               {lectures.map((item, index) => (
                 <VideoCard
                   key={index}
-                  title="React introduction"
-                  description="This is a introduction lecture of react"
+                  title={item.title}
+                  description={item.description}
                   num={index + 1}
-                  lectureId="lecturehjhfhghg"
+                  lectureId={item._id}
                   courseId={id}
                   deleteButtonHandler={deleteButtonHandler}
+                  loading={loading}
                 />
               ))}
             </Box>
@@ -97,7 +99,6 @@ const CourseModal = ({
                     size={'md'}
                     textTransform={'uppercase'}
                   />
-
                   <Input
                     focusBorderColor="purple.300"
                     placeholder="Title"
@@ -131,7 +132,12 @@ const CourseModal = ({
                     ></video>
                   )}
 
-                  <Button w={'full'} colorScheme="purple" type="submit">
+                  <Button
+                    isLoading={loading}
+                    w={'full'}
+                    colorScheme="purple"
+                    type="submit"
+                  >
                     Add Lecture
                   </Button>
                 </VStack>
@@ -156,6 +162,7 @@ function VideoCard({
   lectureId,
   courseId,
   deleteButtonHandler,
+  loading,
 }) {
   return (
     <Stack
@@ -172,6 +179,7 @@ function VideoCard({
       </Box>
 
       <Button
+        isLoading={loading}
         color={'purple.600'}
         onClick={() => deleteButtonHandler(courseId, lectureId)}
       >
