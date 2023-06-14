@@ -8,7 +8,6 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: "./.env" });
 
-
 // Call connectionDB
 Connection();
 
@@ -17,7 +16,7 @@ const PORT = 9000;
 // Create Server Using Only NodeJs
 const io = new Server(PORT, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://spectacular-licorice-34118d.netlify.app",
     methods: ["GET", "POST"],
   },
 });
