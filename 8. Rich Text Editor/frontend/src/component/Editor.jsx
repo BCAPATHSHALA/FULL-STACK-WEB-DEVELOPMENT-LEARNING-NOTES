@@ -52,7 +52,7 @@ const Editor = () => {
 
   // Setup socket.io as a client
   useEffect(() => {
-    const socketServer = io("https://rich-text-editor-euba.onrender.com");
+    const socketServer = io("http://localhost:3000");
     setSocket(socketServer);
 
     return () => {
