@@ -1,0 +1,69 @@
+@import "colors";
+.footerContainer {
+  width: 100vw;
+  height: 90px;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: #ffffff4d 0px 1px 2px 0px, #bfbfbf26 0px 1px 3px 1px;
+  .logoDiv {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .imageDiv {
+      width: 80px;
+      height: 80px;
+      position: relative;
+      img {
+        height: inherit;
+        width: inherit;
+        object-fit: contain;
+        object-position: center;
+      }
+    }
+  }
+  .navDiv {
+    flex: 1;
+    ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      li {
+        list-style: none;
+        font-size: 0.7rem;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: 600;
+        transition: color ease-in 0.5s;
+        > a {
+          color: $primary;
+          &:hover {
+            color: crimson;
+          }
+        }
+      }
+    }
+  }
+  .creditDiv {
+    flex: 1;
+    p {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: crimson;
+    }
+  }
+}
+
+// Responsive
+@media screen and (max-width: 769px) {
+  .footerContainer {
+    width: 100vw;
+    height: 130px;
+    flex-direction: column;
+    padding: 10px;
+  }
+}

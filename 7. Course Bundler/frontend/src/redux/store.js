@@ -21,4 +21,4 @@ const store = configureStore({
 
 export default store;
 
-export const server = 'https://course-bundler-7be0.onrender.com/api/v1';
+export const server = 'http://localhost:4000/api/v1';
